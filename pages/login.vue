@@ -4,22 +4,24 @@
             <div>Welcome</div>
             
             <div class="text-3xl mt-4">Log into your account</div>
-            
-            <div class="mt-12">
+                        
+            <form @submit.prevent="onSubmit" class="mt-12">
                 <label class="block">
-                    <span class="block text-sm">Username</span>
+                    <span class="block text-sm">Email</span>
 
-                    <input type="text" class="bg-gray-light text-gray-lighter rounded focus:outline-none w-full px-4 py-2 mt-2" />
+                    <input v-model="email" type="email" class="bg-gray-light text-gray-lighter rounded focus:outline-none w-full px-4 py-2 mt-2" required />
                 </label>
 
                 <label class="block mt-4">
                     <span class="block text-sm">Password</span>
 
-                    <input type="password" class="bg-gray-light text-gray-lighter rounded focus:outline-none w-full px-4 py-2 mt-2" />
+                    <input v-model="password" type="password" class="bg-gray-light text-gray-lighter rounded focus:outline-none w-full px-4 py-2 mt-2" required />
                 </label>
-            </div>
-            
-            <button class="bg-gray-lightest rounded px-8 py-2 mt-6">Login</button>
+
+                <p v-if="error" class="text-sm text-red-500 mt-4">{{ error }}</p>
+
+                <button class="bg-gray-lightest rounded px-8 py-2 mt-6">Login</button>
+            </form>
             
             <div class="text-sm text-center mt-16">
                 <span>Don't have an account? </span>
@@ -31,7 +33,35 @@
 
 <script>
 export default {
-    name: "login"
+    name: "login",
+    middleware: 'auth',
+    auth: 'guest',
+    data() {
+        return {
+            email: '',
+            password: '',
+            
+            error: ''
+        }
+    },
+    methods: {
+        async onSubmit() {
+            this.error = ''
+
+            try {
+                let res = await this.$auth.loginWith('local', { 
+                    data: {
+                        email: this.email,
+                        password: this.password,
+                    } 
+                })
+                
+                this.$auth.setUser(res.data)
+            } catch (err) {
+                this.error = 'Your credentials do not match our records'
+            }
+        },
+    }
 }
 </script>
 

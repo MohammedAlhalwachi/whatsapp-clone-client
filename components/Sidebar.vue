@@ -7,7 +7,7 @@
                 <button class="mr-4">
                     <icon class="leading-normal">chat</icon>
                 </button>
-                <button>
+                <button @click="logout">
                     <icon class="leading-normal">logout</icon>
                 </button>
             </div>
@@ -36,7 +36,13 @@ import RoomItem from "@/components/RoomItem";
 
 export default {
     name: "Sidebar",
-    components: {RoomItem, PlaceholderAvatar}
+    components: {RoomItem, PlaceholderAvatar},
+    methods: {
+        async logout() {
+            await this.$auth.logout();
+            await this.$router.push('login');
+        }
+    }
 }
 </script>
 

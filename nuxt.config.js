@@ -23,6 +23,7 @@ export default {
         link: [
             {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
             {rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
+            {rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'},
         ]
     },
     /*
@@ -55,12 +56,42 @@ export default {
     modules: [
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
+        '@nuxtjs/auth',
     ],
+
+    // router: {
+    //     middleware: [
+    //         'auth',
+    //     ],
+    // },
+    
+    publicRuntimeConfig: {
+        axios: {
+            baseURL: process.env.BASE_URL,
+        }
+    },
     /*
     ** Axios module configuration
     ** See https://axios.nuxtjs.org/options
     */
-    axios: {},
+    axios: {
+        withCredentials: true,
+    },
+
+    auth: {
+        strategies: {
+            local: {
+                endpoints: {
+                    login: { url: '/login', method: 'post', withCredentials: true },
+                    logout: { url: '/logout', method: 'post', withCredentials: true },
+                    user: { url: '/user', method: 'get', propertyName: false, withCredentials: true }
+                },
+                tokenRequired: false,
+                tokenType: false,
+                autoFetchUser: false
+            }
+        }
+    },
     /*
     ** Build configuration
     ** See https://nuxtjs.org/api/configuration-build/

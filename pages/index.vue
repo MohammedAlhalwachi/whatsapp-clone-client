@@ -11,7 +11,8 @@ import Sidebar from "@/components/Sidebar";
 import Room from "@/components/Room";
 
 export default {
-    components: {Room, Sidebar}
+    components: {Room, Sidebar},
+    middleware: 'auth',
 }
 </script>
 
