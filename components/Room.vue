@@ -14,16 +14,17 @@
             <div class="py-1"></div>
         </div>
 
-        <div class="flex px-4 py-2" style="background-color: #1E2428">
+        <form @submit.prevent="sendMessage" class="flex px-4 py-2" style="background-color: #1E2428">
             <label class="flex-grow px-2">
                 <span class="sr-only">Message</span>
-                <input type="text" class="bg-gray-light text-gray-lighter rounded-full focus:outline-none w-full px-4 py-2" style="background-color: #33383B;" placeholder="Type a message"/>
+                <input v-model="message" type="text" class="bg-gray-light text-gray-lighter rounded-full focus:outline-none w-full px-4 py-2" style="background-color: #33383B;" placeholder="Type a message"/>
             </label>
 
-            <div class="flex justify-center items-center text-gray-lighter px-2">
-                <icon>send</icon>
-            </div>
-        </div>
+            <button class="flex justify-center items-center text-gray-lighter px-2">
+                <Spinner v-if="isSending"></Spinner>
+                <icon v-else>send</icon>
+            </button>
+        </form>
     </div>
 </template>
 
@@ -31,32 +32,22 @@
 import PlaceholderAvatar from '@/components/PlaceholderAvatar'
 import Messages from "@/components/Messages";
 import {mapActions, mapGetters, mapState} from "vuex";
+import Spinner from "@/components/Spinner";
 
 export default {
     name: "Room",
-    components: {Messages, PlaceholderAvatar},
+    components: {Spinner, Messages, PlaceholderAvatar},
     data() {
         return {
-            // messages: [
-            //     'Test1',
-            //     'Test Test Test Test Test Test Test Test Test Test Test Test',
-            //     'Test1',
-            //     'Test1',
-            //     'Test Test Test Test Test Test Test Test Test Test Test Test',
-            //     'Test1',
-            //     'Test1',
-            //     'Test Test TedksljklsjdklajsTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test Test Test Test',
-            //     'Test Test TedksljklsjdklajsTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test Test Test Test',
-            //     'Test1',
-            //     'Test1',
-            //     'Test1',
-            //     'Test1',
-            // ],
+            message: '',
+            isSending: false,
+            intervalId: undefined,
         }
     },
     computed: {
         ...mapState('rooms', {
-            messages: 'messages'
+            messages: 'messages',
+            currentRoomId: 'currentId'
         }),
         ...mapGetters('rooms', {
             currentRoom: 'current'
@@ -69,10 +60,39 @@ export default {
         ...mapActions('rooms', {
             getMessages: 'getMessages'
         }),
+        async sendMessage(){
+            
+            if(this.isSending === true || this.message.trim() === '')
+                return;
+
+            console.log(this.isSending)
+            
+            this.isSending = true;
+
+            try {
+                const message = await this.$axios.post(`/rooms/${this.currentRoomId}/messages`, {
+                    body: this.message,
+                });
+
+                this.message = '';
+                await this.getMessages();
+            }catch (err){
+                console.error(err);
+            }
+            
+            this.isSending = false;
+        },
+        async syncMessages(){
+            await this.getMessages();
+            setTimeout(() => {
+                this.syncMessages();
+            }, 1000);
+        }
     },
     created() {
         this.getMessages();
-    }
+        // this.syncMessages();
+    },
 }
 </script>
 
