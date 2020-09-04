@@ -37,6 +37,7 @@ export default {
     plugins: [
         '~/plugins/globalComponents.js',
         '~/plugins/vee-validate.js',
+        '~/plugins/pusher.js',
     ],
     /*
     ** Auto import components
@@ -68,7 +69,9 @@ export default {
     publicRuntimeConfig: {
         axios: {
             baseURL: process.env.BASE_URL,
-        }
+        },
+        pusherKey: process.env.PUSHER_KEY,
+        pusherCluster: process.env.PUSHER_CLUSTER
     },
     /*
     ** Axios module configuration

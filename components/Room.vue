@@ -64,8 +64,6 @@ export default {
             
             if(this.isSending === true || this.message.trim() === '')
                 return;
-
-            console.log(this.isSending)
             
             this.isSending = true;
 
@@ -75,7 +73,7 @@ export default {
                 });
 
                 this.message = '';
-                await this.getMessages();
+                // await this.getMessages();
             }catch (err){
                 console.error(err);
             }
@@ -91,7 +89,11 @@ export default {
     },
     created() {
         this.getMessages();
-        // this.syncMessages();
+
+        const channel = this.$pusher.subscribe(`room-${this.currentRoomId}`);
+        channel.bind('update-messages', (data) => {
+            this.getMessages();
+        });
     },
 }
 </script>
