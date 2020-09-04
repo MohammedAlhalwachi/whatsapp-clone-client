@@ -1,12 +1,12 @@
 <template>
-    <div class="flex items-center hover:bg-gray-light cursor-pointer">
+    <div @click="setCurrentRoom({ id })" class="flex items-center hover:bg-gray-light cursor-pointer">
         <div class="px-2">
             <PlaceholderAvatar class="w-12 h-12"></PlaceholderAvatar>
         </div>
 
         <div class="flex-grow border-b border-gray-light text-gray-lighter min-w-0 p-2 py-4">
             <div class="flex justify-between items-center mb-1">
-                <span class="truncate pr-2">Test</span>
+                <span class="truncate pr-2">{{ name }}</span>
                 <span class="text-xs whitespace-no-wrap">2:30 PM</span>
             </div>
 
@@ -23,9 +23,16 @@
 </template>
 <script>
 import PlaceholderAvatar from "@/components/PlaceholderAvatar"
+import {mapActions} from "vuex";
 
 export default {
     name: 'RoomItem',
-    components: {PlaceholderAvatar}
+    props: ['id', 'name'],
+    components: {PlaceholderAvatar},
+    methods: {
+        ...mapActions('rooms', {
+            setCurrentRoom: 'setCurrent',
+        }),
+    }
 }
 </script>

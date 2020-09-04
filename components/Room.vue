@@ -4,14 +4,12 @@
             <div class="flex items-center">
                 <PlaceholderAvatar class="w-10 h-10"></PlaceholderAvatar>
                 
-                <span class="tracking-wider text-white px-6">Test</span>
+                <span class="tracking-wider text-white px-6">{{ name }}</span>
             </div>
         </div>
         
         <div class="flex-grow flex flex-col-reverse py-4 overflow-y-scroll">
-            <MessagesBatch class="py-2" :messages="messages" :self="false"/>
-            
-            <MessagesBatch class="py-2" :messages="messages" :self="true"/>
+            <Messages class="py-2" :messages="messages" :self="false"/>
 
             <div class="py-1"></div>
         </div>
@@ -31,29 +29,49 @@
 
 <script>
 import PlaceholderAvatar from '@/components/PlaceholderAvatar'
-import MessagesBatch from "@/components/MessagesBatch";
+import Messages from "@/components/Messages";
+import {mapActions, mapGetters, mapState} from "vuex";
 
 export default {
     name: "Room",
-    components: {MessagesBatch, PlaceholderAvatar},
+    components: {Messages, PlaceholderAvatar},
     data() {
         return {
-            messages: [
-                'Test1',
-                'Test Test Test Test Test Test Test Test Test Test Test Test',
-                'Test1',
-                'Test1',
-                'Test Test Test Test Test Test Test Test Test Test Test Test',
-                'Test1',
-                'Test1',
-                'Test Test TedksljklsjdklajsTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test Test Test Test',
-                'Test Test TedksljklsjdklajsTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test Test Test Test',
-                'Test1',
-                'Test1',
-                'Test1',
-                'Test1',
-            ],
+            // messages: [
+            //     'Test1',
+            //     'Test Test Test Test Test Test Test Test Test Test Test Test',
+            //     'Test1',
+            //     'Test1',
+            //     'Test Test Test Test Test Test Test Test Test Test Test Test',
+            //     'Test1',
+            //     'Test1',
+            //     'Test Test TedksljklsjdklajsTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test Test Test Test',
+            //     'Test Test TedksljklsjdklajsTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test Test Test Test',
+            //     'Test1',
+            //     'Test1',
+            //     'Test1',
+            //     'Test1',
+            // ],
         }
+    },
+    computed: {
+        ...mapState('rooms', {
+            messages: 'messages'
+        }),
+        ...mapGetters('rooms', {
+            currentRoom: 'current'
+        }),
+        name() {
+            return this.currentRoom.name;
+        }
+    },
+    methods: {
+        ...mapActions('rooms', {
+            getMessages: 'getMessages'
+        }),
+    },
+    created() {
+        this.getMessages();
     }
 }
 </script>

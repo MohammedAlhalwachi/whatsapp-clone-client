@@ -75,16 +75,16 @@ export default {
     ** See https://axios.nuxtjs.org/options
     */
     axios: {
-        withCredentials: true,
+        credentials: true,
     },
 
     auth: {
         strategies: {
             local: {
                 endpoints: {
-                    login: { url: '/login', method: 'post', withCredentials: true },
-                    logout: { url: '/logout', method: 'post', withCredentials: true },
-                    user: { url: '/user', method: 'get', propertyName: false, withCredentials: true }
+                    login: { url: '/auth/login', method: 'post', withCredentials: true },
+                    logout: { url: '/auth/logout', method: 'post', withCredentials: true },
+                    user: { url: '/auth/user', method: 'get', propertyName: false, withCredentials: true }
                 },
                 tokenRequired: false,
                 tokenType: false,
