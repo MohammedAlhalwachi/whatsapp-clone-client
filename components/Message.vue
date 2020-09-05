@@ -16,7 +16,7 @@
              :class="[self ? 'rounded-tr-none' : 'rounded-tl-none']"
              :style="{ backgroundColor: this.color }">
 
-            <p>{{ body }}</p>
+            <p class="break-words">{{ body }}</p>
             <div class="text-right">
                 <span class="text-xs whitespace-no-wrap">{{ time }}</span>
             </div>
